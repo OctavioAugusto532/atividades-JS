@@ -1,0 +1,135 @@
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curtidas</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            width: 400px;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 25px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            background: #333;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        button:hover {
+            background: #555;
+        }
+
+        #limpar {
+            background: #c0392b;
+        }
+
+        #limpar:hover {
+            background: #e74c3c;
+        }
+
+        p {
+            margin-top: 25px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Quem curtiu?</h1>
+
+        <input type="text" id="nome" placeholder="Digite seu nome">
+
+        <button id="curtir">Curtir</button>
+        <button id="limpar">Limpar</button>
+
+        <p id="resultado">Ninguém curtiu</p>
+    </div>
+
+    <script>
+        let pessoas = JSON.parse(localStorage.getItem('pessoasCurtiram')) || [];
+
+        const campoNome = document.getElementById('nome');
+        const botaoCurtir = document.getElementById('curtir');
+        const botaoLimpar = document.getElementById('limpar');
+        const resultado = document.getElementById('resultado');
+
+        function atualizarResultado() {
+            if (pessoas.length === 0) {
+                resultado.textContent = 'Ninguém curtiu';
+            } else if (pessoas.length === 1) {
+                resultado.textContent = `${pessoas[0]} curtiu`;
+            } else if (pessoas.length === 2) {
+                resultado.textContent = `${pessoas[0]} e ${pessoas[1]} curtiram`;
+            } else {
+                resultado.textContent = `${pessoas[0]}, ${pessoas[1]} e mais ${pessoas.length - 2} pessoas curtiram`;
+            }
+        }
+
+        botaoCurtir.addEventListener('click', function() {
+            const nome = campoNome.value.trim();
+
+            if (nome === '') {
+                return;
+            }
+
+            if (!pessoas.includes(nome)) {
+                pessoas.push(nome);
+                localStorage.setItem('pessoasCurtiram', JSON.stringify(pessoas));
+            }
+
+            atualizarResultado();
+
+            campoNome.value = '';
+            campoNome.focus();
+        });
+
+        botaoLimpar.addEventListener('click', function() {
+            pessoas = [];
+            localStorage.removeItem('pessoasCurtiram');
+            atualizarResultado();
+        });
+
+        atualizarResultado();
+    </script>
+
+</body>
+</html>
+```
